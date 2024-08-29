@@ -1,4 +1,11 @@
 fn main() {
+  for line in std::io::stdin().lines() {
+    if let Ok(line) = line {
+      let words: Vec<&str> = line.split(" ").collect();
+      println!("line: {words:?}");
+    }
+  }
+
   let mut stack = vec![];
 
   stack.push(42);
