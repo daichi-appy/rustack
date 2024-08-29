@@ -1,23 +1,24 @@
 fn main() {
+  
   for line in std::io::stdin().lines() {
+    let mut stack = vec![];
+
     if let Ok(line) = line {
       let words: Vec<&str> = line.split(" ").collect();
-      println!("line: {words:?}");
+
+      for word in words {
+        if let Ok(parsed) = word.parse::<i32>() {
+          stack.push(parsed);
+        } else {
+          match word {
+            "+" => add(&mut stack),
+            _ => panic!("{word:?} coudn't be parsed"),
+          }
+        }
+      }
+      println!("stack: {stack:?}");
     }
   }
-
-  let mut stack = vec![];
-
-  stack.push(42);
-  stack.push(36);
-
-  add(&mut stack);
-
-  stack.push(22);
-  
-  add(&mut stack);
-
-  println!("stack: {stack:?}");
 }
 
 fn add(stack: &mut Vec<i32>) {
