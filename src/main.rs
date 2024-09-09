@@ -54,7 +54,7 @@ impl Vm {
     Self {
       stack: vec![],
       vars: HashMap::new(),
-      blocks: vec![]
+      blocks: vec![],
     }
   }
 }
@@ -63,11 +63,11 @@ fn main() {
   if let Some(f) = std::env::args()
     .nth(1)
     .and_then(|f| std::fs::File::open(f).ok())
-    {
-      parse_batch(BufReader::new(f));
-    } else {
-      parse_interactive();
-    }
+  {
+    parse_batch(BufReader::new(f));
+  } else {
+    parse_interactive();
+  }
 }
 
 fn parse_batch(source: impl BufRead) -> Vec<Value> {
@@ -86,7 +86,7 @@ fn parse_interactive() {
     for word in line.split(" ") {
       parse_word(word, &mut vm);
     }
-    println!("stack: {:?}", vm.stack)
+    println!("stack: {:?}", vm.stack);
   }
 }
 
@@ -99,9 +99,8 @@ fn parse_word(word: &str, vm: &mut Vm) {
   } else if word == "}" {
     let top_block =
       vm.blocks.pop().expect("Block stack underrun!");
-    eval(Value::Block(top_block), vm)
-  } 
-  else {
+    eval(Value::Block(top_block), vm);
+  } else {
     let code = if let Ok(num) = word.parse::<i32>() {
       Value::Num(num)
     } else if word.starts_with("/") {
@@ -111,8 +110,6 @@ fn parse_word(word: &str, vm: &mut Vm) {
     };
     eval(code, vm);
   }
-
-  println!("stack: {:?}", vm.stack);
 }
 
 fn eval(code: Value, vm: &mut Vm) {
